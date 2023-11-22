@@ -1,0 +1,19 @@
+--- 
+- name: Coyp file {{ DB_PRE_SCHOOL_NAME }}.sql đến directory database.
+  ansible.builtin.copy:
+    src: "{{ DB_PRE_SCHOOL_NAME }}.sql"
+    dest: /home/database
+    owner: root
+    group: root
+    mode: u=rw,g=wr,o=r
+- name: Tạo databse {{ DB_PRE_SCHOOL_NAME }}.
+  mysql_db:
+    name: "{{ DB_PRE_SCHOOL_NAME }}"
+    state: present
+- name: Import database {{ DB_PRE_SCHOOL_NAME }} từ file {{ DB_PRE_SCHOOL_NAME }}.sql
+  mysql_db:
+    login_user: "{{ LOGIN_USER }}"
+    login_password: "{{ LOGIN_PASSWORD }}"
+    name: "{{ DB_PRE_SCHOOL_NAME }}"
+    state: import
+    target: "/home/database/{{ DB_PRE_SCHOOL_NAME }}.sql"

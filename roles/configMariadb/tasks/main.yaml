@@ -1,0 +1,47 @@
+--- 
+- name: Create a new repo file for the 10.6 version
+  shell: curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version="mariadb-10.6"  
+- name: Cài đặt MariaDB-server.
+  yum:
+    name: '{{packages}}'
+    state: present
+  vars:
+    packages:
+        - MariaDB-server
+        - galera-4
+        - MariaDB-client
+        - MariaDB-shared
+        - MariaDB-backup
+        - MariaDB-common
+        - MySQL-python
+- name: Start service mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+- name: Enable service mariadb
+  ansible.builtin.service:
+    name: mariadb
+    enabled: yes
+- name: Khai báo dịch vụ mariadb với tường lửa
+  shell: firewall-cmd --add-port=3306/tcp --zone=public --permanent
+- name: Restart friewall services
+  shell: firewall-cmd --reload
+- name: Tạo user loi_user@localhost
+  mysql_user:
+    name: "{{ LOGIN_USER }}"
+    password: "{{ LOGIN_PASSWORD }}"
+    priv: '*.*:ALL'
+    state: present
+- name: Restart service mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: restarted
+- name: Tạo directory database làm nơi lưu các file sql.
+  ansible.builtin.file:
+    path: /home/database
+    state: directory
+    mode: '755'
+- name: create Database obbs
+  import_tasks: createDabaseObbs.yaml
+- name: create Database preschool
+  import_tasks: createDabasePreschool.yaml

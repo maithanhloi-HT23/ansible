@@ -1,0 +1,20 @@
+---
+- name: Cài đặt Apche packge.
+  yum: 
+    name: httpd
+    state: present
+- name: Enable service httpd
+  ansible.builtin.service:
+    name: httpd
+    enabled: yes
+- name: Start service httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+- name: Khai báo dịch vụ http với tường lửa.
+  shell: firewall-cmd --permanent --add-service=http
+- name: Khai báo dịch vụ http với tường lửa.
+  shell: firewall-cmd --permanent --add-service=https
+  notify:
+    - Restart service httpd
+    - Reload firewall-cmd

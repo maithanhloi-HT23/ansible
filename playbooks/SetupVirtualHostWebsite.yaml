@@ -1,0 +1,8 @@
+---
+- name: Thiết lập virtual host trên máy chủ web.
+  hosts: webserver
+  become: yes
+  become_user: root
+
+  roles:
+    - settingVirtualHost

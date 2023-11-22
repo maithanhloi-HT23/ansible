@@ -1,0 +1,34 @@
+---
+- name: Cài đặt timezone và đồng bộ thời gian.
+  hosts: all
+  remote_user: root
+
+  tasks:
+    - name: Ensure NTP is installed .
+      yum:
+        name: ntp
+        state: present
+      become: True
+    - name: Ensure the timezone is set to UTC
+      file:
+        src: /usr/share/zoneinfo/GMT
+        dest: /etc/localtime
+        state: link
+      become: True
+    - name: Ensure the NTP service is running and enabled
+      service:
+        name: ntpd
+        state: started
+        enabled: True
+      become: True
+    - name: Xóa tệp /etc/localtime.
+      ansible.builtin.file:
+        path: /etc/foo
+        state: absent
+    - name: Dịnh cấu hình múi giờ Asia/Vientiane và tạo liên kết
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/Asia/Vientiane
+        dest: /etc/localtime
+        owner: root
+        group: root
+        state: link

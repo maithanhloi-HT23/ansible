@@ -1,0 +1,46 @@
+---
+- name: Đảm bảo rằng user root có bộ quyền mặc định với directory /var/www.
+  ansible.builtin.file:
+    path: /var/www
+    owner: root
+    group: root
+    mode: "755"
+- name: Tạo directory sites-available.
+  ansible.builtin.file:
+    path: /etc/httpd/sites-available
+    state: directory
+    mode: "755"
+- name: Tạo directory sites-enabled.
+  ansible.builtin.file:
+    path: /etc/httpd/sites-enabled
+    state: directory
+    mode: "755"
+- name: Đảm bảo khai báo directory sites-enabled trong file cấu hình httpd.conf.
+  become: yes
+  become_user: root
+  tags: inserFile
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: "^IncludeO"
+    line: "IncludeOptional sites-enabled/*.conf"
+    firstmatch: yes
+    state: present
+  register: inserFile
+- name: Điều chỉnh các chính sách Apache trên phạm vị toàn bộ.
+  shell: setsebool -P httpd_unified 1
+- name: Restart service httpd.
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+- name: Fix error semanage command Not Found Error.
+  yum:
+    name: policycoreutils-python
+    state: present
+- name: Tạo virtual host website {{ PRE_SHOOL_NAME }}
+  import_tasks: hostPreschool.yaml
+- name: Tạo virtual host website {{ BANQUET_BOOKING_NAME }}
+  import_tasks: hostBanquetBooking.yaml
+- name: Restart service httpd.
+  ansible.builtin.service:
+    name: httpd
+    state: restarted

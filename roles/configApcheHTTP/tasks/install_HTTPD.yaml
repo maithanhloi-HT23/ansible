@@ -1,0 +1,14 @@
+---
+- name: Cài đặt Apche packge.
+  yum: 
+    name: httpd
+    state: present
+  notify:
+    - Start service httpd
+    - Enable service httpd
+- name: Khai báo dịch vụ http với tường lửa.
+  shell: firewall-cmd --permanent --add-service=http
+- name: Khai báo dịch vụ http với tường lửa.
+  shell: firewall-cmd --permanent --add-service=https
+  notify:
+    - Reload firewall-cmd

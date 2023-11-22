@@ -1,0 +1,36 @@
+---
+- name: Tạo folder html cho web {{ BANQUET_BOOKING_DOMAIN }}.
+  ansible.builtin.file:
+    path: /var/www/{{ BANQUET_BOOKING_DOMAIN }}/html
+    state: directory
+    mode: "755"
+- name: Lập directory để lưu trữ file log cho trang web {{ BANQUET_BOOKING_DOMAIN }}.
+  ansible.builtin.file:
+    path: /var/www/{{ BANQUET_BOOKING_DOMAIN }}/log
+    state: directory
+    mode: "755"
+- name: Tải mã nguồn {{ BANQUET_BOOKING_NAME }} 
+  ansible.builtin.git: 
+    repo: '{{ BANQUET_BOOKING_GIT_PATH }}'
+    dest: /var/www/{{ BANQUET_BOOKING_DOMAIN }}/html
+    clone: yes
+    update: yes
+- name: Tạo files config {{ BANQUET_BOOKING_DOMAIN }} virtual host trong directory sites-available.
+  ansible.builtin.template:
+    src: conf_{{ BANQUET_BOOKING_NAME }}.j2
+    dest: /etc/httpd/sites-available/{{ BANQUET_BOOKING_DOMAIN }}.conf
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+- name: Tạo liên kết giữa virtual host files {{ BANQUET_BOOKING_DOMAIN }} trong directory sites-available và sites-enabled
+  ansible.builtin.file:
+    src: /etc/httpd/sites-available/{{ BANQUET_BOOKING_DOMAIN }}.conf
+    dest: /etc/httpd/sites-enabled/{{ BANQUET_BOOKING_DOMAIN }}.conf
+    owner: root
+    group: root
+    state: link
+    force: true
+- name: Cho phép Apache tạo và nối các file trong {{ BANQUET_BOOKING_DOMAIN }}/log ứng dụng web lại với nhau.
+  shell: semanage fcontext -a -t httpd_log_t "/var/www/{{ BANQUET_BOOKING_DOMAIN }}/log(/.*)?"
+- name: Sử dụng lệnh restorecon để áp dụng các thay đổi này trong directory {{ BANQUET_BOOKING_DOMAIN }} và để chúng tồn tại qua các lần khởi động lại.
+  shell: restorecon -R -v /var/www/{{ BANQUET_BOOKING_DOMAIN }}/log

@@ -1,0 +1,9 @@
+---
+PRE_SHOOL_DOMAIN: "loimtpreschool.us.to"
+BANQUET_BOOKING_DOMAIN: "banquetbooking.id.vn"
+PRE_SHOOL_NAME: "loimtpreschool"
+BANQUET_BOOKING_NAME: "banquetbooking"
+PRE_SHOOL_GIT_PATH : 'https://github.com/maithanhloi-HT23/preschool.git'
+BANQUET_BOOKING_GIT_PATH : 'https://github.com/maithanhloi-HT23/BanquetBooKingSystem.git'
+SRC_PRE_SHOOL_PATH : '/home/BanquetBooKingSystem/'
+SRC_BANQUET_BOOKING_PATH : '/home/preschool/'

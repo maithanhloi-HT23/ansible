@@ -1,0 +1,8 @@
+---
+- name: Restart service httpd
+  ansible.builtin.service:
+    name: httpd
+    state: restarted
+
+- name: Reload firewall-cmd
+  shell: firewall-cmd --reload

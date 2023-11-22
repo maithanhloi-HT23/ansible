@@ -1,0 +1,13 @@
+--- 
+- name: Cài đặt PHP
+  import_tasks: install_PHP.yaml
+- name: Cài đặt httpd
+  import_tasks: install_HTTPD.yaml
+#  Kiểm tra dịch vụ httpd.
+- name: Tạo một tệp info.php trong /var/www/html.
+  copy:
+    dest: "/var/www/html/info.php"
+    content: |
+        <?php
+          phpinfo();
+        ?>

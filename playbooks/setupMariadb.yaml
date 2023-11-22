@@ -1,0 +1,8 @@
+---
+- name: Setup MariaDB on Web Server
+  hosts: webserver
+  become: yes
+  become_user: root
+
+  roles:
+    - configMariadb

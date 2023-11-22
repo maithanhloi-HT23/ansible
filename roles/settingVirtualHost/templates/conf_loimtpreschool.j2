@@ -1,0 +1,7 @@
+<VirtualHost *:80>
+  ServerName {{ PRE_SHOOL_DOMAIN }}
+  ServerAlias {{ PRE_SHOOL_DOMAIN }}
+  DocumentRoot /var/www/{{ PRE_SHOOL_DOMAIN }}/html
+  ErrorLog /var/www/{{ PRE_SHOOL_DOMAIN }}/log/error.log
+  CustomLog /var/www/{{ PRE_SHOOL_DOMAIN }}/log/requests.log combined
+</VirtualHost>

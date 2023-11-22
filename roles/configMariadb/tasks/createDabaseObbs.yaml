@@ -1,0 +1,21 @@
+--- 
+- name: Coyp file {{ DB_OBBS_NAME }}.sql đến directory database.
+  ansible.builtin.copy:
+    src: "{{ DB_OBBS_NAME }}.sql"
+    dest: /home/database
+    owner: root
+    group: root
+    mode: u=rw,g=wr,o=r
+- name: Tạo databse {{ DB_OBBS_NAME }}.
+  mysql_db:
+    name: "{{ DB_OBBS_NAME }}"
+    state: present
+- name: Import database {{ DB_OBBS_NAME }} từ file {{ DB_OBBS_NAME }}.sql
+  mysql_db:
+    login_user: "{{ LOGIN_USER }}"
+    login_password: "{{ LOGIN_PASSWORD }}"
+    name: "{{ DB_OBBS_NAME }}"
+    state: import
+    target: "/home/database/{{ DB_OBBS_NAME }}.sql"
+  notify: 
+    - Restart service mariadb

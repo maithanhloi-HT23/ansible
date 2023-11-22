@@ -1,0 +1,9 @@
+---
+- name: Cài đặt Git.
+  yum:
+    name: '{{packages}}'
+    state: present
+  vars:
+    packages:
+      - epel-release
+      - git
